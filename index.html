@@ -64,8 +64,8 @@ body {
     font-size: 13px;
     color: #8b8c8f;
     display: flex;
-    justify-content: space-between;
-    margin-top: 4px;
+    flex-direction: column;
+    gap: 5px;
 }
 
 .button {
@@ -136,9 +136,9 @@ body {
 
 .chart-legend {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 12px;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
     margin-top: 12px;
 }
 
@@ -170,17 +170,17 @@ body {
 
 .toast {
     position: fixed;
-    top: 50%;  /* 改为 top: 50% */
+    top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);  /* 改为 translate(-50%, -50%) */
+    transform: translate(-50%, -50%);
     background-color: rgba(0, 0, 0, 0.8);
     color: white;
-    padding: 15px 30px;  /* 稍微加大内边距 */
+    padding: 15px 30px;
     border-radius: 4px;
-    font-size: 14px;  /* 稍微加大字体 */
+    font-size: 14px;
     display: none;
     z-index: 1000;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);  /* 添加阴影效果 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 </style>
 </head>
@@ -226,7 +226,6 @@ function searchPatterns(buffer) {
         "85": 19, "86": 7, "87": 13, "88": 36
     };
 
-  
     const objectPattern = "4F626A656374";
     let pos = 0;
     while(true) {
@@ -237,30 +236,31 @@ function searchPatterns(buffer) {
             const startPos = pos - 288;
             const contentToCheck = hexString.substring(startPos, pos);
             const firstByte = contentToCheck.substr(0, 2);
-
-            if (pos >= 264) {
-                const sizeCheckPos = pos - 264;
-                const byteToCheck = hexString.substr(sizeCheckPos, 2);
-
-                if (byteToCheck === "59") {
-                    if (pos >= 288) {
-                        const specialCheckPos = pos - 288;
-                        const specialByte = hexString.substr(specialCheckPos, 2);
-                        if (specialByte === "0D") {
-                            totalSize += 6;
-                        } else {
-                            totalSize += 1;
-                        }
-                    }
-                } else if (moduleSizes[byteToCheck]) {
-                    totalSize += moduleSizes[byteToCheck];
-                }
-            }
-
             const isPartOfStruct = contentToCheck.includes("537472756374");
 
             if((firstByte === "00" || firstByte === "0D") && !isPartOfStruct) {
                 objectCount++;
+                // 确保每个基础模块至少计入1点占用量
+                let additionalSize = 1;
+
+                if (pos >= 264) {
+                    const sizeCheckPos = pos - 264;
+                    const byteToCheck = hexString.substr(sizeCheckPos, 2);
+
+                    if (byteToCheck === "59") {
+                        if (pos >= 288) {
+                            const specialCheckPos = pos - 288;
+                            const specialByte = hexString.substr(specialCheckPos, 2);
+                            if (specialByte === "0D") {
+                                additionalSize = 6;
+                            }
+                        }
+                    } else if (moduleSizes[byteToCheck]) {
+                        additionalSize = moduleSizes[byteToCheck];
+                    }
+                }
+
+                totalSize += additionalSize;
             }
         }
 
@@ -288,7 +288,6 @@ function searchPatterns(buffer) {
 
     return { objectCount, structCount, totalSize };
 }
-
 function bytesToHex(bytes) {
     return Array.from(bytes).map(b => b.toString(16).padStart(2, '0').toUpperCase()).join('');
 }
@@ -305,14 +304,12 @@ function showToast(message) {
 function generateShareImage(mapName, objectCount, structCount, totalSize) {
     const canvas = document.createElement('canvas');
     canvas.width = 600;
-    canvas.height = 800;
+    canvas.height = 750;
     const ctx = canvas.getContext('2d');
 
-    
     ctx.fillStyle = '#232529';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-   
     ctx.fillStyle = '#ffffff';
     ctx.font = 'bold 36px Arial';
     ctx.textAlign = 'center';
@@ -322,7 +319,6 @@ function generateShareImage(mapName, objectCount, structCount, totalSize) {
     ctx.fillStyle = '#8b8c8f';
     ctx.fillText('By: 老娇', canvas.width/2, 100);
 
-   
     ctx.strokeStyle = '#3a3d42';
     ctx.lineWidth = 2;
     ctx.beginPath();
@@ -330,22 +326,20 @@ function generateShareImage(mapName, objectCount, structCount, totalSize) {
     ctx.lineTo(canvas.width - 40, 130);
     ctx.stroke();
 
-    
     ctx.textAlign = 'left';
     ctx.font = '24px Arial';
     ctx.fillStyle = '#8b8c8f';
 
-  
     const startY = 200;
     const lineHeight = 100;
 
-    
+    // 地图名称
     ctx.fillText('地图名称:', 40, startY);
     ctx.fillStyle = '#4CAF50';
     ctx.font = 'bold 32px Arial';
     ctx.fillText(mapName, 40, startY + 40);
 
-  
+    // 基础模块数量
     ctx.fillStyle = '#8b8c8f';
     ctx.font = '24px Arial';
     ctx.fillText('基础模块数量:', 40, startY + lineHeight);
@@ -353,7 +347,7 @@ function generateShareImage(mapName, objectCount, structCount, totalSize) {
     ctx.font = 'bold 32px Arial';
     ctx.fillText(objectCount, 40, startY + lineHeight + 40);
 
-   
+    // 官模数量
     ctx.fillStyle = '#8b8c8f';
     ctx.font = '24px Arial';
     ctx.fillText('官模数量:', 40, startY + lineHeight * 2);
@@ -361,28 +355,67 @@ function generateShareImage(mapName, objectCount, structCount, totalSize) {
     ctx.font = 'bold 32px Arial';
     ctx.fillText(structCount, 40, startY + lineHeight * 2 + 40);
 
+    // 修改环形图的位置和图例样式
+    const centerX = canvas.width - 150;
+    const centerY = startY + lineHeight * 1.5;
+    const radius = 70;
+    const total = objectCount + structCount;
+
+    let startAngle = -Math.PI / 2;
     
+    // 绘制基础模块部分（黄色）
+    const objectAngle = (objectCount / total) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, startAngle, startAngle + objectAngle);
+    ctx.arc(centerX, centerY, radius * 0.6, startAngle + objectAngle, startAngle, true);
+    ctx.fillStyle = '#FFC107';
+    ctx.fill();
+    
+    // 绘制官模部分（绿色）
+    startAngle += objectAngle;
+    const structAngle = (structCount / total) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, startAngle, startAngle + structAngle);
+    ctx.arc(centerX, centerY, radius * 0.6, startAngle + structAngle, startAngle, true);
+    ctx.fillStyle = '#4CAF50';
+    ctx.fill();
+
+    // 修改图例样式和位置
+    const legendY = centerY + radius + 30; // 增加与环形图的距离
+    ctx.font = '16px Arial';
+    ctx.textAlign = 'center';
+    
+    // 基础模块图例（黄色）
+    ctx.fillStyle = '#FFC107';
+    ctx.fillText(`基础模块: ${objectCount}`, centerX, legendY);
+    
+    // 官模图例（绿色）
+    ctx.fillStyle = '#4CAF50';
+    ctx.fillText(`官模: ${structCount}`, centerX, legendY + 25);
+
+    // 基础模块总占用
     ctx.fillStyle = '#8b8c8f';
     ctx.font = '24px Arial';
+    ctx.textAlign = 'left';
     ctx.fillText('基础模块总占用:', 40, startY + lineHeight * 3);
     ctx.fillStyle = '#4CAF50';
     ctx.font = 'bold 32px Arial';
     ctx.fillText(totalSize, 40, startY + lineHeight * 3 + 40);
 
-    
+    // 进度条
     const maxSize = 12000;
     const percentage = (totalSize / maxSize * 100).toFixed(1);
     
     ctx.fillStyle = '#8b8c8f';
     ctx.font = '24px Arial';
     ctx.fillText('基础模块占用进度:', 40, startY + lineHeight * 4);
+    ctx.font = '16px Arial';
+    ctx.fillText('实际占用可能存在少许偏差', 40, startY + lineHeight * 4 + 25);
 
-    
     ctx.fillStyle = 'rgba(76, 175, 80, 0.2)';
-    const progressBarY = startY + lineHeight * 4 + 20;
+    const progressBarY = startY + lineHeight * 4 + 45;
     ctx.fillRect(40, progressBarY, canvas.width - 80, 20);
 
-  
     const fillWidth = Math.min(percentage, 100) * (canvas.width - 80) / 100;
     const gradient = ctx.createLinearGradient(40, 0, canvas.width - 40, 0);
     gradient.addColorStop(0, '#4CAF50');
@@ -390,38 +423,15 @@ function generateShareImage(mapName, objectCount, structCount, totalSize) {
     ctx.fillStyle = gradient;
     ctx.fillRect(40, progressBarY, fillWidth, 20);
 
-    
+    // 进度条下方的文字（上下布局）
     ctx.fillStyle = '#8b8c8f';
     ctx.font = '20px Arial';
+    ctx.textAlign = 'left';
     ctx.fillText(`${totalSize}/12000`, 40, progressBarY + 40);
     ctx.textAlign = 'right';
     ctx.fillText(`${percentage}%`, canvas.width - 40, progressBarY + 40);
 
     return canvas;
-}
-
-async function shareStats() {
-    const mapName = document.querySelector('.stat-number').textContent;
-    const stats = document.querySelectorAll('.stat-number');
-    
-    const canvas = generateShareImage(
-        mapName,
-        stats[1].textContent,
-        stats[2].textContent,
-        stats[3].textContent
-    );
-
-    try {
-        const blob = await new Promise(resolve => canvas.toBlob(resolve));
-        await navigator.clipboard.write([
-            new ClipboardItem({
-                'image/png': blob
-            })
-        ]);
-        showToast('图片已复制到剪切板中，按CTRL+V即可直接粘贴');
-    } catch (err) {
-        showToast('复制失败，请检查浏览器权限设置');
-    }
 }
 
 function drawDonutChart(objectCount, structCount) {
@@ -432,12 +442,9 @@ function drawDonutChart(objectCount, structCount) {
     const radius = Math.min(centerX, centerY) * 0.8;
     const total = objectCount + structCount;
 
-    
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-   
     let startAngle = -Math.PI / 2;
-    
     
     const objectAngle = (objectCount / total) * Math.PI * 2;
     ctx.beginPath();
@@ -446,7 +453,6 @@ function drawDonutChart(objectCount, structCount) {
     ctx.fillStyle = '#FFC107';
     ctx.fill();
     
-   
     startAngle += objectAngle;
     const structAngle = (structCount / total) * Math.PI * 2;
     ctx.beginPath();
@@ -508,7 +514,10 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
 
                 <div class="card">
                     <div class="progress-container">
-                        <div class="progress-label">基础模块占用进度:</div>
+                        <div style="display: flex; flex-direction: column; gap: 5px;">
+                            <div class="progress-label">基础模块占用进度:</div>
+                            <div style="color: #8b8c8f; font-size: 12px;">实际占用可能存在少许偏差</div>
+                        </div>
                         <div class="progress-bar">
                             <div class="progress-fill" style="width: ${Math.min(percentage, 100)}%"></div>
                         </div>
@@ -527,6 +536,30 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
         reader.readAsArrayBuffer(file);
     }
 });
+
+async function shareStats() {
+    const mapName = document.querySelector('.stat-number').textContent;
+    const stats = document.querySelectorAll('.stat-number');
+    
+    const canvas = generateShareImage(
+        mapName,
+        parseInt(stats[1].textContent),
+        parseInt(stats[2].textContent),
+        parseInt(stats[3].textContent)
+    );
+
+    try {
+        const blob = await new Promise(resolve => canvas.toBlob(resolve));
+        await navigator.clipboard.write([
+            new ClipboardItem({
+                'image/png': blob
+            })
+        ]);
+        showToast('图片已复制到剪切板中，按CTRL+V即可直接粘贴');
+    } catch (err) {
+        showToast('复制失败，请检查浏览器权限设置');
+    }
+}
 </script>
 </body>
 </html>
