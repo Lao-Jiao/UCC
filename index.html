@@ -240,7 +240,7 @@ function searchPatterns(buffer) {
 
             if((firstByte === "00" || firstByte === "0D") && !isPartOfStruct) {
                 objectCount++;
-                // 确保每个基础模块至少计入1点占用量
+                //
                 let additionalSize = 1;
 
                 if (pos >= 264) {
@@ -333,13 +333,13 @@ function generateShareImage(mapName, objectCount, structCount, totalSize) {
     const startY = 200;
     const lineHeight = 100;
 
-    // 地图名称
+    // 
     ctx.fillText('地图名称:', 40, startY);
     ctx.fillStyle = '#4CAF50';
     ctx.font = 'bold 32px Arial';
     ctx.fillText(mapName, 40, startY + 40);
 
-    // 基础模块数量
+    // 
     ctx.fillStyle = '#8b8c8f';
     ctx.font = '24px Arial';
     ctx.fillText('基础模块数量:', 40, startY + lineHeight);
@@ -347,7 +347,7 @@ function generateShareImage(mapName, objectCount, structCount, totalSize) {
     ctx.font = 'bold 32px Arial';
     ctx.fillText(objectCount, 40, startY + lineHeight + 40);
 
-    // 官模数量
+    // 
     ctx.fillStyle = '#8b8c8f';
     ctx.font = '24px Arial';
     ctx.fillText('官模数量:', 40, startY + lineHeight * 2);
@@ -355,7 +355,7 @@ function generateShareImage(mapName, objectCount, structCount, totalSize) {
     ctx.font = 'bold 32px Arial';
     ctx.fillText(structCount, 40, startY + lineHeight * 2 + 40);
 
-    // 修改环形图的位置和图例样式
+    // 
     const centerX = canvas.width - 150;
     const centerY = startY + lineHeight * 1.5;
     const radius = 70;
@@ -363,7 +363,7 @@ function generateShareImage(mapName, objectCount, structCount, totalSize) {
 
     let startAngle = -Math.PI / 2;
     
-    // 绘制基础模块部分（黄色）
+    // 
     const objectAngle = (objectCount / total) * Math.PI * 2;
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius, startAngle, startAngle + objectAngle);
@@ -371,7 +371,7 @@ function generateShareImage(mapName, objectCount, structCount, totalSize) {
     ctx.fillStyle = '#FFC107';
     ctx.fill();
     
-    // 绘制官模部分（绿色）
+    // 
     startAngle += objectAngle;
     const structAngle = (structCount / total) * Math.PI * 2;
     ctx.beginPath();
@@ -380,20 +380,20 @@ function generateShareImage(mapName, objectCount, structCount, totalSize) {
     ctx.fillStyle = '#4CAF50';
     ctx.fill();
 
-    // 修改图例样式和位置
+    //
     const legendY = centerY + radius + 30; // 增加与环形图的距离
     ctx.font = '16px Arial';
     ctx.textAlign = 'center';
     
-    // 基础模块图例（黄色）
+    // 
     ctx.fillStyle = '#FFC107';
     ctx.fillText(`基础模块: ${objectCount}`, centerX, legendY);
     
-    // 官模图例（绿色）
+    // 
     ctx.fillStyle = '#4CAF50';
     ctx.fillText(`官模: ${structCount}`, centerX, legendY + 25);
 
-    // 基础模块总占用
+    // 
     ctx.fillStyle = '#8b8c8f';
     ctx.font = '24px Arial';
     ctx.textAlign = 'left';
@@ -402,7 +402,7 @@ function generateShareImage(mapName, objectCount, structCount, totalSize) {
     ctx.font = 'bold 32px Arial';
     ctx.fillText(totalSize, 40, startY + lineHeight * 3 + 40);
 
-    // 进度条
+    // 
     const maxSize = 12000;
     const percentage = (totalSize / maxSize * 100).toFixed(1);
     
@@ -423,7 +423,7 @@ function generateShareImage(mapName, objectCount, structCount, totalSize) {
     ctx.fillStyle = gradient;
     ctx.fillRect(40, progressBarY, fillWidth, 20);
 
-    // 进度条下方的文字（上下布局）
+    // 
     ctx.fillStyle = '#8b8c8f';
     ctx.font = '20px Arial';
     ctx.textAlign = 'left';
