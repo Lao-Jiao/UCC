@@ -1,220 +1,61 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>UCC模块统计器</title>
-<style>
-body {
-    background-color: #1a1c1e;
-    color: #ffffff;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-}
-
-.container {
-    max-width: 1000px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 15px;
-}
-
-.card {
-    background-color: #232529;
-    border-radius: 8px;
-    padding: 15px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.stat-number {
-    font-size: 28px;
-    font-weight: bold;
-    margin: 8px 0;
-    color: #4CAF50;
-}
-
-.stat-label {
-    font-size: 13px;
-    color: #8b8c8f;
-    margin-bottom: 4px;
-}
-
-.progress-container {
-    margin-top: 15px;
-}
-
-.progress-bar {
-    width: 100%;
-    height: 8px;
-    background: rgba(76, 175, 80, 0.2);
-    border-radius: 4px;
-    overflow: hidden;
-    margin: 8px 0;
-}
-
-.progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #4CAF50, #45a049);
-    border-radius: 4px;
-    transition: width 0.5s ease-in-out;
-}
-
-.progress-text {
-    font-size: 13px;
-    color: #8b8c8f;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.button {
-    background: linear-gradient(90deg, #4CAF50, #45a049);
-    border: none;
-    color: white;
-    padding: 12px 25px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 15px;
-    margin: 15px 0;
-    transition: transform 0.2s;
-    width: 100%;
-}
-
-.button:hover {
-    transform: translateY(-2px);
-}
-
-.share-button {
-    background: linear-gradient(90deg, #2196F3, #1976D2);
-    border: none;
-    color: white;
-    padding: 12px 25px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 15px;
-    margin: 15px 0;
-    transition: transform 0.2s;
-    width: 100%;
-}
-
-.share-button:hover {
-    transform: translateY(-2px);
-}
-
-.header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 25px;
-    text-align: center;
-}
-
-.title {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 4px;
-}
-
-.author {
-    color: #8b8c8f;
-    font-size: 14px;
-}
-
-.loading {
-    color: #8b8c8f;
-    text-align: center;
-    padding: 15px;
-}
-
-.donut-chart {
-    width: 180px;
-    height: 180px;
-    margin: 15px auto;
-    position: relative;
-}
-
-.chart-legend {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    margin-top: 12px;
-}
-
-.legend-item {
-    display: flex;
-    align-items: center;
-    font-size: 13px;
-    color: #8b8c8f;
-}
-
-.legend-color {
-    width: 10px;
-    height: 10px;
-    margin-right: 4px;
-    border-radius: 2px;
-}
-
-.chart-container {
-    text-align: center;
-    margin: 15px 0;
-}
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 15px;
-    margin: 15px 0;
-}
-
-.toast {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 15px 30px;
-    border-radius: 4px;
-    font-size: 14px;
-    display: none;
-    z-index: 1000;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-</style>
+    <meta charset="UTF-8">
+    <title>UCC计算服务</title>
+    <style>
+        body {
+            background-color: #1a1c1e;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .button {
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            border: none;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 15px;
+            margin: 15px 0;
+        }
+        #link {
+            margin-top: 20px;
+        }
+        #link a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        #link a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-<div class="header">
-    <div class="title">UCC模块统计器</div>
-    <div class="author">By: 老娇</div>
-</div>
-
-<div class="container">
-    <div class="card">
+    <div class="container">
+        <h1>UCC文件处理</h1>
         <input type="file" id="fileInput" accept=".ucc" style="display: none">
-        <button class="button" onclick="document.getElementById('fileInput').click()">打开UCC文件</button>
-        <div id="result"></div>
+        <button class="button" onclick="document.getElementById('fileInput').click()">选择UCC文件</button>
+        <div id="link"></div>
     </div>
-</div>
-
-<div id="toast" class="toast"></div>
 
 <script>
-function searchPatterns(buffer) {
+// 核心计算函数
+function calculateModuleSize(buffer) {
     const bytes = new Uint8Array(buffer);
-    const hexString = bytesToHex(bytes);
+    const hexString = Array.from(bytes).map(b => b.toString(16).padStart(2, '0').toUpperCase()).join('');
     let objectCount = 0;
     let structCount = 0;
     let totalSize = 0;
 
     const moduleSizes = {
-        "61": 6,
-        "0E": 1,
-        "23": 1,
-        "24": 1,
-        "25": 1,
-        "62": 1, 
+        "61": 6, "0E": 1, "23": 1, "24": 1, "25": 1, "62": 1, 
         "5E": 1, "5F": 1, "5C": 1, "5D": 1, "60": 1,
         "57": 1, "58": 5, "64": 1, "65": 48, "66": 4,
         "67": 1, "68": 3, "69": 6, "6A": 44, "6B": 14,
@@ -240,7 +81,6 @@ function searchPatterns(buffer) {
 
             if((firstByte === "00" || firstByte === "0D") && !isPartOfStruct) {
                 objectCount++;
-                //
                 let additionalSize = 1;
 
                 if (pos >= 264) {
@@ -252,314 +92,64 @@ function searchPatterns(buffer) {
                             const specialCheckPos = pos - 288;
                             const specialByte = hexString.substr(specialCheckPos, 2);
                             if (specialByte === "0D") {
-                                additionalSize = 6;
+                                const floatStartPos = specialCheckPos + 56 * 2;
+                                const floatHex = hexString.substr(floatStartPos, 8);
+                                
+                                const bytes = new Uint8Array(4);
+                                for (let i = 0; i < 4; i++) {
+                                    bytes[i] = parseInt(floatHex.substr(i * 2, 2), 16);
+                                }
+                                const floatView = new Float32Array(bytes.buffer);
+                                const floatValue = floatView[0];
+                                
+                                additionalSize = Math.floor(floatValue);
                             }
                         }
                     } else if (moduleSizes[byteToCheck]) {
                         additionalSize = moduleSizes[byteToCheck];
                     }
                 }
-
                 totalSize += additionalSize;
             }
         }
-
         pos += objectPattern.length;
-    }
-    
-    const structPattern = "537472756374";
-    pos = 0;
-    while(true) {
-        pos = hexString.indexOf(structPattern, pos);
-        if(pos === -1) break;
-
-        if (pos >= 288) {
-            const startPos = pos - 288;
-            const contentToCheck = hexString.substring(startPos, pos);
-            const firstByte = contentToCheck.substr(0, 2);
-
-            if(firstByte === "05") {
-                structCount++;
-            }
-        }
-
-        pos += structPattern.length;
     }
 
     return { objectCount, structCount, totalSize };
 }
-function bytesToHex(bytes) {
-    return Array.from(bytes).map(b => b.toString(16).padStart(2, '0').toUpperCase()).join('');
-}
 
-function showToast(message) {
-    const toast = document.getElementById('toast');
-    toast.textContent = message;
-    toast.style.display = 'block';
-    setTimeout(() => {
-        toast.style.display = 'none';
-    }, 3000);
-}
-
-function generateShareImage(mapName, objectCount, structCount, totalSize) {
-    const canvas = document.createElement('canvas');
-    canvas.width = 600;
-    canvas.height = 750;
-    const ctx = canvas.getContext('2d');
-
-    ctx.fillStyle = '#232529';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 36px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText('UCC模块统计器', canvas.width/2, 60);
-    
-    ctx.font = '24px Arial';
-    ctx.fillStyle = '#8b8c8f';
-    ctx.fillText('By: 老娇', canvas.width/2, 100);
-
-    ctx.strokeStyle = '#3a3d42';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(40, 130);
-    ctx.lineTo(canvas.width - 40, 130);
-    ctx.stroke();
-
-    ctx.textAlign = 'left';
-    ctx.font = '24px Arial';
-    ctx.fillStyle = '#8b8c8f';
-
-    const startY = 200;
-    const lineHeight = 100;
-
-    // 
-    ctx.fillText('地图名称:', 40, startY);
-    ctx.fillStyle = '#4CAF50';
-    ctx.font = 'bold 32px Arial';
-    ctx.fillText(mapName, 40, startY + 40);
-
-    // 
-    ctx.fillStyle = '#8b8c8f';
-    ctx.font = '24px Arial';
-    ctx.fillText('基础模块数量:', 40, startY + lineHeight);
-    ctx.fillStyle = '#4CAF50';
-    ctx.font = 'bold 32px Arial';
-    ctx.fillText(objectCount, 40, startY + lineHeight + 40);
-
-    // 
-    ctx.fillStyle = '#8b8c8f';
-    ctx.font = '24px Arial';
-    ctx.fillText('官模数量:', 40, startY + lineHeight * 2);
-    ctx.fillStyle = '#4CAF50';
-    ctx.font = 'bold 32px Arial';
-    ctx.fillText(structCount, 40, startY + lineHeight * 2 + 40);
-
-    // 
-    const centerX = canvas.width - 150;
-    const centerY = startY + lineHeight * 1.5;
-    const radius = 70;
-    const total = objectCount + structCount;
-
-    let startAngle = -Math.PI / 2;
-    
-    // 
-    const objectAngle = (objectCount / total) * Math.PI * 2;
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, radius, startAngle, startAngle + objectAngle);
-    ctx.arc(centerX, centerY, radius * 0.6, startAngle + objectAngle, startAngle, true);
-    ctx.fillStyle = '#FFC107';
-    ctx.fill();
-    
-    // 
-    startAngle += objectAngle;
-    const structAngle = (structCount / total) * Math.PI * 2;
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, radius, startAngle, startAngle + structAngle);
-    ctx.arc(centerX, centerY, radius * 0.6, startAngle + structAngle, startAngle, true);
-    ctx.fillStyle = '#4CAF50';
-    ctx.fill();
-
-    //
-    const legendY = centerY + radius + 30; // 增加与环形图的距离
-    ctx.font = '16px Arial';
-    ctx.textAlign = 'center';
-    
-    // 
-    ctx.fillStyle = '#FFC107';
-    ctx.fillText(`基础模块: ${objectCount}`, centerX, legendY);
-    
-    // 
-    ctx.fillStyle = '#4CAF50';
-    ctx.fillText(`官模: ${structCount}`, centerX, legendY + 25);
-
-    // 
-    ctx.fillStyle = '#8b8c8f';
-    ctx.font = '24px Arial';
-    ctx.textAlign = 'left';
-    ctx.fillText('基础模块总占用:', 40, startY + lineHeight * 3);
-    ctx.fillStyle = '#4CAF50';
-    ctx.font = 'bold 32px Arial';
-    ctx.fillText(totalSize, 40, startY + lineHeight * 3 + 40);
-
-    // 
-    const maxSize = 12000;
-    const percentage = (totalSize / maxSize * 100).toFixed(1);
-    
-    ctx.fillStyle = '#8b8c8f';
-    ctx.font = '24px Arial';
-    ctx.fillText('基础模块占用进度:', 40, startY + lineHeight * 4);
-    ctx.font = '16px Arial';
-    ctx.fillText('实际占用可能存在少许偏差，此数据不包含官模占用数量', 40, startY + lineHeight * 4 + 25);
-
-    ctx.fillStyle = 'rgba(76, 175, 80, 0.2)';
-    const progressBarY = startY + lineHeight * 4 + 45;
-    ctx.fillRect(40, progressBarY, canvas.width - 80, 20);
-
-    const fillWidth = Math.min(percentage, 100) * (canvas.width - 80) / 100;
-    const gradient = ctx.createLinearGradient(40, 0, canvas.width - 40, 0);
-    gradient.addColorStop(0, '#4CAF50');
-    gradient.addColorStop(1, '#45a049');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(40, progressBarY, fillWidth, 20);
-
-    // 
-    ctx.fillStyle = '#8b8c8f';
-    ctx.font = '20px Arial';
-    ctx.textAlign = 'left';
-    ctx.fillText(`${totalSize}/12000`, 40, progressBarY + 40);
-    ctx.textAlign = 'right';
-    ctx.fillText(`${percentage}%`, canvas.width - 40, progressBarY + 40);
-
-    return canvas;
-}
-
-function drawDonutChart(objectCount, structCount) {
-    const canvas = document.getElementById('donutChart');
-    const ctx = canvas.getContext('2d');
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-    const radius = Math.min(centerX, centerY) * 0.8;
-    const total = objectCount + structCount;
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    let startAngle = -Math.PI / 2;
-    
-    const objectAngle = (objectCount / total) * Math.PI * 2;
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, radius, startAngle, startAngle + objectAngle);
-    ctx.arc(centerX, centerY, radius * 0.6, startAngle + objectAngle, startAngle, true);
-    ctx.fillStyle = '#FFC107';
-    ctx.fill();
-    
-    startAngle += objectAngle;
-    const structAngle = (structCount / total) * Math.PI * 2;
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, radius, startAngle, startAngle + structAngle);
-    ctx.arc(centerX, centerY, radius * 0.6, startAngle + structAngle, startAngle, true);
-    ctx.fillStyle = '#4CAF50';
-    ctx.fill();
-}
-
-document.getElementById('fileInput').addEventListener('change', function(event) {
+// 文件处理
+document.getElementById('fileInput').addEventListener('change', async function(event) {
     const file = event.target.files[0];
     if (file) {
-        document.getElementById('result').innerHTML = '<div class="loading">正在处理文件，请稍候...</div>';
-
         const reader = new FileReader();
         reader.onload = function(e) {
             const buffer = e.target.result;
-            const { objectCount, structCount, totalSize } = searchPatterns(buffer);
-
-            const mapName = file.name.replace('.ucc', '');
-            const maxSize = 12000;
-            const percentage = (totalSize / maxSize * 100).toFixed(1);
-
-            const resultHTML = `
-                <div class="stats-grid">
-                    <div class="card">
-                        <div class="stat-label">地图名称</div>
-                        <div class="stat-number">${mapName}</div>
-                    </div>
-                    <div class="card">
-                        <div class="stat-label">基础模块数量</div>
-                        <div class="stat-number">${objectCount}</div>
-                    </div>
-                    <div class="card">
-                        <div class="stat-label">官模数量</div>
-                        <div class="stat-number">${structCount}</div>
-                    </div>
-                    <div class="card">
-                        <div class="stat-label">基础模块总占用</div>
-                        <div class="stat-number">${totalSize}</div>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="chart-container">
-                        <canvas id="donutChart" width="180" height="180"></canvas>
-                        <div class="chart-legend">
-                            <div class="legend-item">
-                                <div class="legend-color" style="background: #FFC107"></div>
-                                <span>基础模块: ${objectCount}</span>
-                            </div>
-                            <div class="legend-item">
-                                <div class="legend-color" style="background: #4CAF50"></div>
-                                <span>官模: ${structCount}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="progress-container">
-                        <div style="display: flex; flex-direction: column; gap: 5px;">
-                            <div class="progress-label">基础模块占用进度:</div>
-                            <div style="color: #8b8c8f; font-size: 12px;">实际占用可能存在少许偏差，此数据不包含官模占用数量</div>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: ${Math.min(percentage, 100)}%"></div>
-                        </div>
-                        <div class="progress-text">
-                            <span>${totalSize}/12000</span>
-                            <span>${percentage}%</span>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="share-button" onclick="shareStats()">生成分享图片</button>`;
-
-            document.getElementById('result').innerHTML = resultHTML;
-            setTimeout(() => drawDonutChart(objectCount, structCount), 0);
+            const result = calculateModuleSize(buffer);
+            
+            // 准备数据
+            const data = {
+                fileName: file.name,
+                ...result
+            };
+            
+            // 创建URL参数
+            const params = new URLSearchParams();
+            params.append('data', JSON.stringify(data));
+            
+            // 生成前端页面URL（根据实际路径修改）
+            const url = `../frontend/frontend.html?${params.toString()}`;
+            
+            // 显示链接
+            const linkElem = document.getElementById('link');
+            linkElem.innerHTML = `
+                <p>处理完成！</p>
+                <a href="${url}" target="_blank">点击查看结果</a>
+            `;
         };
         reader.readAsArrayBuffer(file);
     }
 });
-
-async function shareStats() {
-    const mapName = document.querySelector('.stat-number').textContent;
-    const stats = document.querySelectorAll('.stat-number');
-    
-    const canvas = generateShareImage(
-        mapName,
-        parseInt(stats[1].textContent),
-        parseInt(stats[2].textContent),
-        parseInt(stats[3].textContent)
-    );
-
-    try {
-        const blob = await new Promise(resolve => canvas.toBlob(resolve));
-        await navigator.clipboard.write([
-            new ClipboardItem({
-                'image/png': blob
-            })
-        ]);
-        showToast('图片已复制到剪切板中，按CTRL+V即可直接粘贴');
-    } catch (err) {
-        showToast('复制失败，请检查浏览器权限设置');
-    }
-}
 </script>
 </body>
 </html>
